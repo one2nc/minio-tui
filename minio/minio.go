@@ -3,7 +3,6 @@ package minio
 import (
 	"context"
 	"fmt"
-
 	"github.com/minio/minio-go/v7"
 	"github.com/minio/minio-go/v7/pkg/credentials"
 )
@@ -50,4 +49,14 @@ func GetFiles(bucketName string, client *minio.Client) ([]minio.ObjectInfo, erro
 		objects = append(objects, object)
 	}
 	return objects, nil
-}	
+}
+
+func MakeBucket(bucketName string,client *minio.Client,bucketOptions minio.MakeBucketOptions) error {
+	err := client.MakeBucket(context.Background(),bucketName,bucketOptions)
+	if err != nil {
+		fmt.Println(err)
+		return err
+	}
+	fmt.Println("Bucket Created Succesfully!!!!") 
+	return nil
+}

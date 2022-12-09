@@ -2,7 +2,7 @@ package main
 
 import (
 	"log"
-
+	// x "github.com/minio/minio-go/v7"
 	"github.com/one2nc/minio-tui/minio"
 	"github.com/one2nc/minio-tui/tui"
 	"github.com/rivo/tview"
@@ -17,11 +17,14 @@ var minioCfg = &minio.Config{
 
 func main() {
 	
-	minioClinet, err := minio.GetMinioClient(minioCfg)
+	minioClient, err := minio.GetMinioClient(minioCfg)
 	if err != nil {
 		log.Fatalf("%v", err)
 	}
-	buckets, err := minio.GetBuckets(minioClinet)
+
+    // bucketName:="one2nbucket"
+	// minio.MakeBucket(bucketName,minioClient,x.MakeBucketOptions{Region: "us-east-1", ObjectLocking: true})
+	buckets, err := minio.GetBuckets(minioClient)
 	if err != nil {
 		log.Fatalf("%v", err)
 	}
@@ -31,7 +34,7 @@ func main() {
 	tuiConfig := &tui.Config{
 		App:         app,
 		Pages:       pages,
-		MinioClient: minioClinet,
+		MinioClient: minioClient,
 	}
 
 	flex := tui.DisplayBuckets(buckets, tuiConfig)
@@ -40,4 +43,6 @@ func main() {
 	if err := app.SetRoot(pages, true).EnableMouse(true).SetFocus(pages).Run(); err != nil {
 		panic(err)
 	}
+
+
 }

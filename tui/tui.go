@@ -21,7 +21,7 @@ func DisplayBuckets(buckets []minio.BucketInfo, config *Config) (page *tview.Fle
 
 	text := tview.NewTextView().
 		SetTextColor(tcell.ColorGreen).
-		SetText(fmt.Sprintf("Stats:\nBuckets: %v\nControls\nmouse click\nenter\n<?> help", len(buckets)))
+		SetText(fmt.Sprintf("Stats:\nBuckets: %v\nControls\nmouse click\nenter\n<?> help\n<r> Refresh Buckets\n<c> create new bucket", len(buckets)))
 	text.SetBorder(true)
 
 	table := tview.NewTable()
@@ -54,8 +54,73 @@ func DisplayBuckets(buckets []minio.BucketInfo, config *Config) (page *tview.Fle
 			fmt.Println("error: ", err)
 		}
 		config.Pages.AddPage("page2", DisplayFiles(files, config), true, false)
+
 		config.Pages.SwitchToPage("page2")
 		table.SetSelectable(true, false)
+	})
+
+	config.App.SetInputCapture(func(event *tcell.EventKey) *tcell.EventKey {
+		if event.Rune() == 114 {
+			//extract to methhod **Refresh Bucket**
+			config.Pages.RemovePage("page1")
+			buckets, err := m.GetBuckets(config.MinioClient)
+			if err != nil {
+				fmt.Println("error: ", err)
+			}
+			page := DisplayBuckets(buckets, config)
+			config.Pages.AddAndSwitchToPage("page1", page, true)
+		} else if event.Rune() == 99 {
+			// **Create Bucket**
+			// var bucketName string
+			// // var form = tview.NewForm()
+			// // form.AddInputField("Bucket Name: ", "", 20, nil, func(bucName string) {
+			// // 	bucketName = bucName
+			// // })
+
+			// // SetText("Enter your name:").
+			// // AddButtons([]string{"Submit"})
+
+			// // modal.SetDoneFunc(func(buttonIndex int, buttonLabel string) {
+			// // 	if buttonLabel == "Submit" {
+			// // 		// Get input from the modal and process it
+			// // 		bucketName = modal.GetFormItemText("bucketName")
+			// // 	}
+			// // })
+			// // modal.AddFormItem("bucketName", "Your name:", "", 0, nil)
+			// modal := tview.NewModal().SetInputCapture(func(event *tcell.EventKey) *tcell.EventKey {
+			// 	switch event.Key() {
+			// 	case tcell.KeyEscape:
+			// 		// Handle the escape key
+			// 	case tcell.KeyEnter:
+			// 		// Handle the enter key
+			// 	default:
+			// 		// Handle other keys
+			// 	}
+
+			// 	return event
+			// })
+			// config.Pages.AddAndSwitchToPage("form", modal, true)
+
+			// m.MakeBucket(bucketName, config.MinioClient, minio.MakeBucketOptions{Region: "us-east-1", ObjectLocking: true})
+
+			// 	SetText(fmt.Sprintf("File Info\nName: %v\nOwner: %v\nLastModified: %v\nExpiration: %v\nHasDeleteMarker: %v", file.Key, file.Owner.DisplayName, file.LastModified, file.Expiration, file.IsDeleteMarker)).
+			// 	AddButtons([]string{"Ok"}).
+			// 	SetDoneFunc(func(buttonIndex int, buttonLabel string) {
+			// 		config.Pages.SwitchToPage("page2")
+			// 	})
+			// modal.SetBackgroundColor(tcell.ColorDarkBlue)
+			// config.Pages.AddAndSwitchToPage("modal", modal, true)
+			// config.Pages.RemovePage("form")
+
+			// buckets, err := m.GetBuckets(config.MinioClient)
+			// if err != nil {
+			// 	fmt.Println("error: ", err)
+			// }
+			// page := DisplayBuckets(buckets, config)
+			// config.Pages.AddAndSwitchToPage("page1", page, true)
+
+		}
+		return event
 	})
 
 	return flex
