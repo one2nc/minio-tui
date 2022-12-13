@@ -1,6 +1,7 @@
 module github.com/one2nc/minio-tui
-
 go 1.19
+
+replace github.com/rivo/tview v0.0.0-20221128165837-db36428c92d9 => github.com/derailed/tview v0.7.2
 
 require (
 	github.com/dustin/go-humanize v1.0.0 // indirect

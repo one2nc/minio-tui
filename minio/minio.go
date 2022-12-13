@@ -3,10 +3,13 @@ package minio
 import (
 	"context"
 	"fmt"
+	"os"
+
 	"github.com/minio/minio-go/v7"
 	"github.com/minio/minio-go/v7/pkg/credentials"
 )
 
+// path is to store objects
 type Config struct {
 	Endpoint, AccessKey, SecretAccessKey string
 	UseSSL                               bool
@@ -51,12 +54,44 @@ func GetFiles(bucketName string, client *minio.Client) ([]minio.ObjectInfo, erro
 	return objects, nil
 }
 
-func MakeBucket(bucketName string,client *minio.Client,bucketOptions minio.MakeBucketOptions) error {
-	err := client.MakeBucket(context.Background(),bucketName,bucketOptions)
+func MakeBucket(bucketName string, client *minio.Client, bucketOptions minio.MakeBucketOptions) error {
+	err := client.MakeBucket(context.Background(), bucketName, bucketOptions)
 	if err != nil {
-		fmt.Println(err)
 		return err
 	}
-	fmt.Println("Bucket Created Succesfully!!!!") 
+	return nil
+}
+
+func DownloadObject(bucketName, objName, path string, client *minio.Client) error {
+	// err := client.FGetObject(context.Background(), bucketName, objName, path, minio.GetObjectOptions{})
+	// if err != nil {
+	// 	return err
+	// }
+	object, err := client.GetObject(context.Background(), bucketName, objName, minio.GetObjectOptions{})
+	if err != nil {
+		return err
+	}
+	defer object.Close()
+
+	// Read the object data
+	data := make([]byte, 1024)
+	n, err := object.Read(data)
+	if err != nil {
+		fmt.Println("n: ", n)
+		return nil
+	}
+	f, err := os.Create(objName)
+
+	if err != nil {
+		return err
+	}
+
+	defer f.Close()
+
+	_, err2 := f.Write(data)
+
+	if err2 != nil {
+		return err2
+	}
 	return nil
 }
