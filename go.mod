@@ -1,4 +1,5 @@
 module github.com/one2nc/minio-tui
+
 go 1.19
 
 replace github.com/rivo/tview v0.0.0-20221128165837-db36428c92d9 => github.com/derailed/tview v0.7.2
@@ -8,6 +9,7 @@ require (
 	github.com/gdamore/encoding v1.0.0 // indirect
 	github.com/gdamore/tcell v1.4.0 // indirect
 	github.com/gdamore/tcell/v2 v2.5.3 // indirect
+	github.com/gdamore/tcell/v2 v2.5.2
 	github.com/google/uuid v1.3.0 // indirect
 	github.com/json-iterator/go v1.1.12 // indirect
 	github.com/klauspost/compress v1.15.9 // indirect
@@ -22,6 +24,7 @@ require (
 	github.com/rivo/tview v0.0.0-20221128165837-db36428c92d9 // indirect
 	github.com/rivo/uniseg v0.4.2 // indirect
 	github.com/rs/xid v1.4.0 // indirect
+	github.com/sahilm/fuzzy v0.1.0 // indirect
 	github.com/sirupsen/logrus v1.9.0 // indirect
 	golang.org/x/crypto v0.0.0-20220722155217-630584e8d5aa // indirect
 	golang.org/x/net v0.0.0-20220722155237-a158d28d115b // indirect
