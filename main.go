@@ -9,10 +9,14 @@ import (
 )
 
 var minioCfg = &minio.Config{
-	Endpoint:        "play.min.io",
-	AccessKey:       "Q3AM3UQ867SPQQA43P2F",
-	SecretAccessKey: "zuf+tfteSlswRu7BJ86wekitnifILbZam1KYY3TG",
-	UseSSL:          true,
+	// Endpoint:        "play.min.io",
+	// AccessKey:       "Q3AM3UQ867SPQQA43P2F",
+	// SecretAccessKey: "zuf+tfteSlswRu7BJ86wekitnifILbZam1KYY3TG",
+
+	Endpoint:        "127.0.0.1:9000",
+	AccessKey:       "minioadmin",
+	SecretAccessKey: "minioadmin",
+	UseSSL:          false,
 }
 
 func main() {

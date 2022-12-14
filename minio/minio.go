@@ -4,6 +4,7 @@ import (
 	"context"
 	"fmt"
 	"os"
+	"strings"
 
 	"github.com/minio/minio-go/v7"
 	"github.com/minio/minio-go/v7/pkg/credentials"
@@ -67,6 +68,7 @@ func DownloadObject(bucketName, objName, path string, client *minio.Client) erro
 	// if err != nil {
 	// 	return err
 	// }
+	
 	object, err := client.GetObject(context.Background(), bucketName, objName, minio.GetObjectOptions{})
 	if err != nil {
 		return err
@@ -77,9 +79,11 @@ func DownloadObject(bucketName, objName, path string, client *minio.Client) erro
 	data := make([]byte, 1024)
 	n, err := object.Read(data)
 	if err != nil {
-		fmt.Println("n: ", n)
-		return nil
+		return err
 	}
+	objName = fmt.Sprintf("%v-%v", n, objName)
+	temp := strings.Split(objName, "/")
+	objName = temp[len(temp)-1]
 	f, err := os.Create(objName)
 
 	if err != nil {
