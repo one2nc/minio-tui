@@ -172,7 +172,7 @@ func makeAckModel(config *Config, currentPage, title, msg string) {
 func DisplayFiles(bucketName string, files []minio.ObjectInfo, config *Config) *tview.Flex {
 	text := tview.NewTextView().
 		SetTextColor(tcell.ColorGreen).
-		SetText("Page 2 Controls\n <b> back(<-)\n<ctrl + d> Download File\n</> Search")
+		SetText("Page 2 Controls\n <b> back(<-)\n<ctrl + d> Download File\n</> Search\n<ctrl + p> Presigned url")
 	text.SetBorder(true)
 
 	table := tview.NewTable()
