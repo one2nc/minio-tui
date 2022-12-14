@@ -11,6 +11,15 @@ import (
 	"github.com/sahilm/fuzzy"
 )
 
+const (
+	LOGO string = `
+	 __  ____      _        ________ 
+	/  |/  (_)__  (_)__    / ___/ (_)
+   / /|_/ / / _ \/ / _ \  / /__/ / / 
+  /_/  /_/_/_//_/_/\___/  \___/_/_/  
+									 
+	`
+)
 type Config struct {
 	App         *tview.Application
 	Pages       *tview.Pages
@@ -36,15 +45,19 @@ func DisplayBuckets(buckets []minio.BucketInfo, config *Config) *tview.Flex {
 	controls := tview.NewTextView().SetText("<?> help\n<r> Refresh Buckets\n<c> create new bucket\n</> Search")
 	controls.SetBorderPadding(1, 1, 1, 1)
 
-	header.AddItem(stats, 0, 5, false).SetDirection(tview.FlexColumn)
-	header.AddItem(controls, 0, 5, false).SetDirection(tview.FlexColumn)
+	logo := tview.NewTextView().SetText(LOGO).SetTextColor(tcell.NewRGBColor(255,215,0))
+	logo.SetBorderPadding(1, 1, 1, 1)
+
+	header.AddItem(stats, 0, 3, false).SetDirection(tview.FlexColumn)
+	header.AddItem(controls, 0, 3, false).SetDirection(tview.FlexColumn)
+	header.AddItem(logo, 0, 3, false).SetDirection(tview.FlexColumn)
 	//controls.SetBorder(true)
 
 	//content
 	table := tview.NewTable()
 	table.SetBorderPadding(1, 1, 1, 1)
-	table.SetBorder(true).SetBorderColor(tcell.NewRGBColor(205, 133, 63))
-	table.SetTitle(" BUCKETS ").SetTitleColor(tcell.NewRGBColor(139, 69, 19))
+	table.SetBorder(true).SetBorderColor(tcell.NewRGBColor(154,205,50))
+	table.SetTitle(" BUCKETS ").SetTitleColor(tcell.NewRGBColor(124,252,0))
 
 	//footer: for acknowlege things
 	ack := tview.NewTextView()
@@ -58,9 +71,9 @@ func DisplayBuckets(buckets []minio.BucketInfo, config *Config) *tview.Flex {
 	page.AddItem(table, 0, 8, true).SetDirection(tview.FlexRow)
 	page.AddItem(ack, 0, 2, false).SetDirection(tview.FlexRow)
 	//table data
-	h1 := tview.NewTableCell("NAME").SetTextColor(tcell.ColorDarkOliveGreen).SetAlign(tview.AlignCenter)
+	h1 := tview.NewTableCell("NAME").SetTextColor(tcell.NewRGBColor(0,255,255)).SetAlign(tview.AlignCenter)
 	table.SetCell(0, 0, h1)
-	table.SetCell(0, 1, tview.NewTableCell("CREATION DATE").SetTextColor(tcell.ColorDarkOliveGreen).SetAlign(tview.AlignCenter))
+	table.SetCell(0, 1, tview.NewTableCell("CREATION DATE").SetTextColor(tcell.NewRGBColor(0,255,255)).SetAlign(tview.AlignCenter))
 	//table.SetCell(0, 2, tview.NewTableCell("Size").SetTextColor(tcell.ColorDarkOliveGreen).SetAlign(tview.AlignCenter))
 
 	table.SetFixed(1, 1)
