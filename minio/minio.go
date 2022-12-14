@@ -3,8 +3,8 @@ package minio
 import (
 	"context"
 	"fmt"
-	"os"
-	"strings"
+	"net/url"
+	"time"
 
 	"github.com/minio/minio-go/v7"
 	"github.com/minio/minio-go/v7/pkg/credentials"
@@ -64,38 +64,23 @@ func MakeBucket(bucketName string, client *minio.Client, bucketOptions minio.Mak
 }
 
 func DownloadObject(bucketName, objName, path string, client *minio.Client) error {
-	// err := client.FGetObject(context.Background(), bucketName, objName, path, minio.GetObjectOptions{})
-	// if err != nil {
-	// 	return err
-	// }
-	
-	object, err := client.GetObject(context.Background(), bucketName, objName, minio.GetObjectOptions{})
+	err := client.FGetObject(context.Background(), bucketName, objName, path, minio.GetObjectOptions{})
 	if err != nil {
 		return err
-	}
-	defer object.Close()
-
-	// Read the object data
-	data := make([]byte, 1024)
-	n, err := object.Read(data)
-	if err != nil {
-		return err
-	}
-	objName = fmt.Sprintf("%v-%v", n, objName)
-	temp := strings.Split(objName, "/")
-	objName = temp[len(temp)-1]
-	f, err := os.Create(objName)
-
-	if err != nil {
-		return err
-	}
-
-	defer f.Close()
-
-	_, err2 := f.Write(data)
-
-	if err2 != nil {
-		return err2
 	}
 	return nil
+}
+
+func PreSignedUrl(bucketName, objName string, client *minio.Client) (*url.URL, error) {
+	reqParams := make(url.Values)
+	reqParams.Set("response-content-disposition", fmt.Sprintf("attachment; filename=\"%v\"", objName))
+
+	// Generates a presigned url which expires in an hour.
+	presignedURL, err := client.PresignedGetObject(context.Background(), bucketName, objName, time.Second*60*60, reqParams)
+	if err != nil {
+		fmt.Println(err)
+		return nil, err
+	}
+	// fmt.Print("Successfully generated presigned URL", presignedURL)
+	return presignedURL, nil
 }
