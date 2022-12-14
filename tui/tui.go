@@ -24,42 +24,68 @@ type Prompt struct {
 	spacer  int
 }
 
-func DisplayBuckets(buckets []minio.BucketInfo, config *Config) (page *tview.Flex) {
-	flex := tview.NewFlex()
+func DisplayBuckets(buckets []minio.BucketInfo, config *Config) *tview.Flex {
+	page := tview.NewFlex()
+	//header
+	header := tview.NewFlex()
+	stats := tview.NewTextView().
+		//SetTextColor(tcell.Color(tcell.ColorDarkGreen)).
+		SetText(fmt.Sprintf("Buckets: %v\n", len(buckets)))
+	stats.SetBorderPadding(1, 1, 1, 1)
 
-	text := tview.NewTextView().
-		SetTextColor(tcell.ColorGreen).
-		SetText(fmt.Sprintf("Stats:\nBuckets: %v\nControls\nMouse click\nEnter\n<?> Help\n<r> Refresh Buckets\n<c> Create new bucket\n </> Search", len(buckets)))
-	text.SetBorder(true)
+	controls := tview.NewTextView().SetText("<?> help\n<r> Refresh Buckets\n<c> create new bucket\n</> Search")
+	controls.SetBorderPadding(1, 1, 1, 1)
 
+	header.AddItem(stats, 0, 5, false).SetDirection(tview.FlexColumn)
+	header.AddItem(controls, 0, 5, false).SetDirection(tview.FlexColumn)
+	//controls.SetBorder(true)
+
+	//content
 	table := tview.NewTable()
-	table.SetBorder(true)
+	table.SetBorderPadding(1, 1, 1, 1)
+	table.SetBorder(true).SetBorderColor(tcell.NewRGBColor(205, 133, 63))
+	table.SetTitle(" BUCKETS ").SetTitleColor(tcell.NewRGBColor(139, 69, 19))
+
+	//footer: for acknowlege things
+	ack := tview.NewTextView()
+
+	//ack.SetBorder(true)
+	ack.SetTextAlign(tview.AlignCenter)
+	ack.SetText("")
 
 	//layout
-	flex.AddItem(text, 0, 1, true).SetDirection(tview.FlexColumn)
-	flex.AddItem(table, 0, 4, true).SetDirection(tview.FlexRow)
-
+	page.AddItem(header, 0, 3, false).SetDirection(tview.FlexColumn)
+	page.AddItem(table, 0, 8, true).SetDirection(tview.FlexRow)
+	page.AddItem(ack, 0, 2, false).SetDirection(tview.FlexRow)
 	//table data
-	table.SetCell(0, 0, tview.NewTableCell("Bucket-Name").SetTextColor(tcell.ColorDarkOliveGreen).SetAlign(tview.AlignCenter))
-	table.SetCell(0, 1, tview.NewTableCell("CreationDate").SetTextColor(tcell.ColorDarkOliveGreen).SetAlign(tview.AlignCenter))
+	h1 := tview.NewTableCell("NAME").SetTextColor(tcell.ColorDarkOliveGreen).SetAlign(tview.AlignCenter)
+	table.SetCell(0, 0, h1)
+	table.SetCell(0, 1, tview.NewTableCell("CREATION DATE").SetTextColor(tcell.ColorDarkOliveGreen).SetAlign(tview.AlignCenter))
 	//table.SetCell(0, 2, tview.NewTableCell("Size").SetTextColor(tcell.ColorDarkOliveGreen).SetAlign(tview.AlignCenter))
 
+	table.SetFixed(1, 1)
 	for i, b := range buckets {
 		table.SetCell((i + 1), 0, tview.NewTableCell(b.Name).SetAlign(tview.AlignCenter))
 		table.SetCell((i + 1), 1, tview.NewTableCell(b.CreationDate.String()).SetAlign(tview.AlignCenter))
 		//table.SetCell((i + 1), 2, tview.NewTableCell(fmt.Sprintf("%f", b.Size)).SetAlign(tview.AlignCenter))
 	}
 
-	table.Select(1, 1).SetFixed(0, 0).SetDoneFunc(func(key tcell.Key) {
+	table.Select(0, 0).SetDoneFunc(func(key tcell.Key) {
 		if key == tcell.KeyEnter {
 			table.SetSelectable(true, false)
 		}
-	}).SetSelectedFunc(func(row int, column int) {
+	})
+
+	table.SetSelectedFunc(func(row int, column int) {
 		config.Pages.RemovePage("page2")
 		//pages.AddPage("page1", DisplayBuckets(buckets, pages, app), true, false)
+		row = row - 1
+		if row < 0 {
+			row = 0
+		}
 		files, err := m.GetFiles(buckets[row].Name, config.MinioClient)
 		if err != nil {
-			fmt.Println("error: ", err)
+			ack.SetText(err.Error())
 		}
 		config.Pages.AddPage("page2", DisplayFiles(buckets[row].Name, files, config), true, false)
 
@@ -67,13 +93,13 @@ func DisplayBuckets(buckets []minio.BucketInfo, config *Config) (page *tview.Fle
 		table.SetSelectable(true, false)
 	})
 
-	flex.SetInputCapture(func(event *tcell.EventKey) *tcell.EventKey {
+	page.SetInputCapture(func(event *tcell.EventKey) *tcell.EventKey {
 		if event.Rune() == 114 {
 			//extract to methhod **Refresh Bucket**
 			config.Pages.RemovePage("page1")
 			buckets, err := m.GetBuckets(config.MinioClient)
 			if err != nil {
-				fmt.Println("error: ", err)
+				ack.SetText(err.Error())
 			}
 			page := DisplayBuckets(buckets, config)
 			config.Pages.AddAndSwitchToPage("page1", page, true)
@@ -89,7 +115,8 @@ func DisplayBuckets(buckets []minio.BucketInfo, config *Config) (page *tview.Fle
 		return event
 	})
 
-	return flex
+	//frame := tview.NewFrame(page)
+	return page
 }
 
 func makeCreateBucketModalForm(config *Config, bucketOpt minio.MakeBucketOptions) (*tview.ModalForm, error) {
@@ -145,7 +172,7 @@ func makeAckModel(config *Config, currentPage, title, msg string) {
 func DisplayFiles(bucketName string, files []minio.ObjectInfo, config *Config) *tview.Flex {
 	text := tview.NewTextView().
 		SetTextColor(tcell.ColorGreen).
-		SetText("Page 2 Controls\n <b> Back(<-)\n </> Search")
+		SetText("Page 2 Controls\n <b> back(<-)\n<ctrl + d> Download File\n</> Search")
 	text.SetBorder(true)
 
 	table := tview.NewTable()
@@ -153,7 +180,7 @@ func DisplayFiles(bucketName string, files []minio.ObjectInfo, config *Config) *
 
 	flex := tview.NewFlex()
 	//layout
-	flex.AddItem(text, 0, 1, true).SetDirection(tview.FlexColumn)
+	flex.AddItem(text, 0, 1, false).SetDirection(tview.FlexColumn)
 	flex.AddItem(table, 0, 4, true).SetDirection(tview.FlexRow)
 
 	//table data
@@ -172,8 +199,8 @@ func DisplayFiles(bucketName string, files []minio.ObjectInfo, config *Config) *
 	}
 
 	r := 0
-	table.Select(1, 1).SetFixed(0, 0).SetDoneFunc(func(key tcell.Key) {
-		if key == tcell.KeyEnter || key == tcell.KeyUp || key == tcell.KeyDown {
+	table.Select(1, 1).SetFixed(1, 1).SetDoneFunc(func(key tcell.Key) {
+		if key == tcell.KeyEnter {
 			table.SetSelectable(true, false)
 		}
 	}).SetSelectedFunc(func(row int, column int) {
@@ -183,6 +210,7 @@ func DisplayFiles(bucketName string, files []minio.ObjectInfo, config *Config) *
 
 	//capture events
 	flex.SetInputCapture(func(event *tcell.EventKey) *tcell.EventKey {
+		//get back
 		if event.Rune() == 98 {
 			config.Pages.SwitchToPage("page1")
 		} else if event.Rune() == 47 {
@@ -190,8 +218,11 @@ func DisplayFiles(bucketName string, files []minio.ObjectInfo, config *Config) *
 			config.Pages.RemovePage("search-file")
 			config.Pages.AddPage("search-file", form, true, true)
 		}
+
+		//download selected object
 		if event.Key() == tcell.KeyCtrlD {
-			err := m.DownloadObject(bucketName, files[r].Key, "../resources/downloads", config.MinioClient)
+			row, _ := table.GetSelection()
+			err := m.DownloadObject(bucketName, files[row-1].Key, "../resources/downloads", config.MinioClient)
 			if err != nil {
 				makeAckModel(config, "page2", "<Error>", err.Error())
 			} else {
@@ -438,6 +469,5 @@ func DisplayFilterFiles(bucketName string, files []minio.ObjectInfo, config *Con
 		}
 		return event
 	})
-
 	return flex
 }

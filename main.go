@@ -40,7 +40,7 @@ func main() {
 	flex := tui.DisplayBuckets(buckets, tuiConfig)
 	tuiConfig.Pages.AddAndSwitchToPage("page1", flex, true)
 
-	if err := app.SetRoot(pages, true).EnableMouse(true).SetFocus(pages).Run(); err != nil {
+	if err := app.SetRoot(pages, true).EnableMouse(false).SetFocus(pages).Run(); err != nil {
 		panic(err)
 	}
 
