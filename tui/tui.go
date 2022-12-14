@@ -20,6 +20,7 @@ const (
 									 
 	`
 )
+
 type Config struct {
 	App         *tview.Application
 	Pages       *tview.Pages
@@ -45,7 +46,7 @@ func DisplayBuckets(buckets []minio.BucketInfo, config *Config) *tview.Flex {
 	controls := tview.NewTextView().SetText("<?> help\n<r> Refresh Buckets\n<c> create new bucket\n</> Search")
 	controls.SetBorderPadding(1, 1, 1, 1)
 
-	logo := tview.NewTextView().SetText(LOGO).SetTextColor(tcell.NewRGBColor(255,215,0))
+	logo := tview.NewTextView().SetText(LOGO).SetTextColor(tcell.NewRGBColor(255, 215, 0))
 	logo.SetBorderPadding(1, 1, 1, 1)
 
 	header.AddItem(stats, 0, 3, false).SetDirection(tview.FlexColumn)
@@ -56,8 +57,8 @@ func DisplayBuckets(buckets []minio.BucketInfo, config *Config) *tview.Flex {
 	//content
 	table := tview.NewTable()
 	table.SetBorderPadding(1, 1, 1, 1)
-	table.SetBorder(true).SetBorderColor(tcell.NewRGBColor(154,205,50))
-	table.SetTitle(" BUCKETS ").SetTitleColor(tcell.NewRGBColor(124,252,0))
+	table.SetBorder(true).SetBorderColor(tcell.NewRGBColor(154, 205, 50))
+	table.SetTitle(" BUCKETS ").SetTitleColor(tcell.NewRGBColor(124, 252, 0))
 
 	//footer: for acknowlege things
 	ack := tview.NewTextView()
@@ -71,9 +72,9 @@ func DisplayBuckets(buckets []minio.BucketInfo, config *Config) *tview.Flex {
 	page.AddItem(table, 0, 8, true).SetDirection(tview.FlexRow)
 	page.AddItem(ack, 0, 2, false).SetDirection(tview.FlexRow)
 	//table data
-	h1 := tview.NewTableCell("NAME").SetTextColor(tcell.NewRGBColor(0,255,255)).SetAlign(tview.AlignCenter)
+	h1 := tview.NewTableCell("NAME").SetTextColor(tcell.NewRGBColor(0, 255, 255)).SetAlign(tview.AlignCenter)
 	table.SetCell(0, 0, h1)
-	table.SetCell(0, 1, tview.NewTableCell("CREATION DATE").SetTextColor(tcell.NewRGBColor(0,255,255)).SetAlign(tview.AlignCenter))
+	table.SetCell(0, 1, tview.NewTableCell("CREATION DATE").SetTextColor(tcell.NewRGBColor(0, 255, 255)).SetAlign(tview.AlignCenter))
 	//table.SetCell(0, 2, tview.NewTableCell("Size").SetTextColor(tcell.ColorDarkOliveGreen).SetAlign(tview.AlignCenter))
 
 	table.SetFixed(1, 1)
@@ -185,7 +186,7 @@ func makeAckModel(config *Config, currentPage, title, msg string) {
 func DisplayFiles(bucketName string, files []minio.ObjectInfo, config *Config) *tview.Flex {
 	text := tview.NewTextView().
 		SetTextColor(tcell.ColorGreen).
-		SetText("Page 2 Controls\n <b> back(<-)\n<ctrl + d> Download File\n</> Search\n<ctrl + p> Presigned url")
+		SetText("Page 2 Controls\n <b>\t  back(<-)\n <ctrl+d> Download File\n </> \t Search\n <ctrl+p> Presigned url")
 	text.SetBorder(true)
 
 	table := tview.NewTable()
