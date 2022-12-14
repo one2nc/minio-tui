@@ -220,16 +220,6 @@ func DisplayFiles(bucketName string, files []minio.ObjectInfo, config *Config) *
 		}
 
 		//download selected object
-		// if event.Key() == tcell.KeyCtrlD {
-		// 	row, _ := table.GetSelection()
-		// 	err := m.DownloadObject(bucketName, files[row-1].Key, "../resources/downloads", config.MinioClient)
-		// 	if err != nil {
-		// 		makeAckModel(config, "page2", "<Error>", err.Error())
-		// 	} else {
-		// 		makeAckModel(config, "page2", "<Greet>", fmt.Sprintf("%v downloaded.", files[r].Key))
-		// 	}
-		// }
-
 		if event.Key() == tcell.KeyCtrlD {
 			objName := files[r].Key
 			path := fmt.Sprintf("./resources/downloads/%v", objName)
