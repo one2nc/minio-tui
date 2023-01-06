@@ -24,7 +24,7 @@ go run .
 
 `minio-tui`
 
-<img src="./resources/images/minio-tui.png" width="800px" height="420px" alt="minio-tui">
+<img src="./resources/images/minio-tui.png" width="900px" height="500px" alt="minio-tui">
 
 `Create Bucket` : Press `c`
 
@@ -36,12 +36,12 @@ go run .
 
 `View Obejct ` : Press `enter` on any bucket
 
-<img src="./resources/images/page2.png" width="800px" height="420px" alt="minio-tui">
+<img src="./resources/images/page2.png" width="900px" height="500px" alt="minio-tui">
 
 `Presigned URL` : Press `ctrl+p`
 
-<img src="./resources/images/presignedurl.png" width="800px" height="420px" alt="minio-tui">
+<img src="./resources/images/presignedurl.png" width="900px" height="500px" alt="minio-tui">
 
 `Download Object` : Press `ctrl+d`
 
-<img src="./resources/images/downloadObject.png" width="800px" height="420px" alt="minio-tui">
+<img src="./resources/images/downloadObject.png" width="900px" height="500px" alt="minio-tui">
