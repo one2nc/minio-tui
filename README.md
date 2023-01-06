@@ -17,7 +17,8 @@ go run .
 
 - The Minio-tui dashboard provides an overview of all your buckets, including the total number of buckets you have.
 - You can refresh the bucket list by pressing the `r` key.
-- To create a new bucket, use the key ` c `.   - - Navigation through the Minio-tui interface is easy, simply use the up and down arrow keys to move between options and press ` enter ` to select an option.
+- To create a new bucket, use the key ` c `.   
+- Navigation through the Minio-tui interface is easy, simply use the up and down arrow keys to move between options and press ` enter ` to select an option.
 - You can get the presigned url of an object by pressing ` ctrl+p ` and download an object using ` ctrl+d `, that will save the file to the ` ./resources/images ` folder.
 
 
