@@ -24,24 +24,24 @@ go run .
 
 `minio-tui`
 
-<img src="./resources/images/minio-tui.png" width="500px" height="" alt="minio-tui">
+<img src="./resources/images/minio-tui.png" width="800px" height="420px" alt="minio-tui">
 
 `Create Bucket` : Press `c`
 
-<img src="./resources/images/createBucket.png" width="500px" height="" alt="minio-tui">
+<img src="./resources/images/createBucket.png" width="700px" height="250px" alt="minio-tui">
 
 `SearchBucket` : Press `/`
 
-<img src="./resources/images/searchBucket.png" width="500px" height="" alt="minio-tui">
+<img src="./resources/images/searchBucket.png" width="700px" height="250px" alt="minio-tui">
 
 `View Obejct ` : Press `enter` on any bucket
 
-<img src="./resources/images/page2.png" width="500px" height="" alt="minio-tui">
+<img src="./resources/images/page2.png" width="800px" height="420px" alt="minio-tui">
 
 `Presigned URL` : Press `ctrl+p`
 
-<img src="./resources/images/presignedurl.png" width="500px" height="" alt="minio-tui">
+<img src="./resources/images/presignedurl.png" width="800px" height="420px" alt="minio-tui">
 
 `Download Object` : Press `ctrl+d`
 
-<img src="./resources/images/downloadObject.png" width="500px" height="" alt="minio-tui">
+<img src="./resources/images/downloadObject.png" width="800px" height="420px" alt="minio-tui">
